@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, status
-from backend.college_outpass.model import OutPass
+from app.model import OutPass
 app = FastAPI()
 
 lists = {
@@ -35,4 +35,11 @@ def add_outpass(outpass:OutPass):
 
 @app.put("/outpass/{id}")
 def update_outpass(outpass:OutPass, id:str):
-    lists[id] = outpass
+    if id not in lists:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Item with Register ID {id} does not exist"
+        )
+    else:
+        outpass.id = id
+        lists[id] = outpass
