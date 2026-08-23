@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException, status
-from app.model import OutPass
+from app.core.model import OutPass
+import csv
+import os
 app = FastAPI()
 
 lists = {
@@ -43,3 +45,18 @@ def update_outpass(outpass:OutPass, id:str):
     else:
         outpass.id = id
         lists[id] = outpass
+
+@app.delete("/outpass/{id}")
+def delete_outpass(id):
+    if id in lists:
+        del lists[id]
+
+    return "Deleted Sucessfully"
+        
+
+
+with open("dataset.csv", "w", newline="") as f:
+    # 2. Write the standard CSV data
+    writer = csv.writer(f)
+    writer.writerows(lists)
+q
