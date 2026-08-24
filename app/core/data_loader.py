@@ -72,3 +72,19 @@ def update_outpass_data(outpass, id):
             writer.writeheader()
             writer.writerows(data)
             print(f"INFO:    UPdated Sucessfully id: {id} ☑️")
+
+
+# Delete an outpass
+def delete_outpass_data(id):
+    if id in outpass_dict:
+        del outpass_dict[id]
+        data = [dict(value) for value in outpass_dict.values()]
+        with open(file_path, "w", newline="") as file:
+            writer = csv.DictWriter(file, fieldnames=field_names)
+            writer.writeheader()
+            writer.writerows(data)
+            print(f"INFO: Deleted Sucessfully id: {id} ☑️")
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Item not found"
+        )

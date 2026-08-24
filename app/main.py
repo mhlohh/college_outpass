@@ -1,22 +1,16 @@
 from fastapi import FastAPI, HTTPException, status
-from app.core.data_loader import all_outpass_data, outpass_id_data, add_outpass_data, update_outpass_data
+from app.core.data_loader import (
+    all_outpass_data,
+    outpass_id_data,
+    add_outpass_data,
+    update_outpass_data,
+    delete_outpass_data,
+)
 from app.core.model import OutPass
 import csv
 import os
 
 app = FastAPI()
-
-lists = {
-    "4122341": OutPass(
-        name="Muhsil NR",
-        course="Btech AI/ML",
-        id="4122341",
-        reason="Cycling",
-        date="02/08/2026",
-        inside="6:30",
-        outside="4:30",
-    )
-}
 
 
 @app.get("/outpass")
@@ -38,9 +32,7 @@ def add_outpass(outpass: OutPass):
 def update_outpass(outpass: OutPass, id: str):
     update_outpass_data(outpass, id)
 
+
 @app.delete("/outpass/{id}")
 def delete_outpass(id):
-    if id in lists:
-        del lists[id]
-
-    return "Deleted Sucessfully"
+    delete_outpass_data(id)
