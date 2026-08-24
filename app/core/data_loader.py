@@ -65,13 +65,14 @@ def update_outpass_data(outpass, id):
         )
 
     else:
-        outpass_dict[id] = outpass
+        outpass_dict.pop(id)
+        outpass_dict[outpass.id] = outpass
         data = [dict(value) for value in outpass_dict.values()]
         with open(file_path, "w", newline="") as file:
             writer = csv.DictWriter(file, fieldnames=field_names)
             writer.writeheader()
             writer.writerows(data)
-            print(f"INFO:    UPdated Sucessfully id: {id} ☑️")
+            print(f"INFO:     Updated Sucessfully id: {id} ☑️")
 
 
 # Delete an outpass
