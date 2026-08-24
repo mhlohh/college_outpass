@@ -1,10 +1,8 @@
-from app.core.data_config import(
-    intialize_data_set,
-    file_path
-)
+from app.core.data_config import intialize_data_set,file_path,field_names
+from fastapi import HTTPException, status
+from app.core.model import OutPass
 import os
 import csv
-from fastapi import FastAPI, HTTPException, status
 
 
 outpass_dict = {}
@@ -16,7 +14,7 @@ if os.path.exists(file_path):
         dict_list = list(reader)
     for item in dict_list:
         outpass_dict[item["id"]] = item
-        print(outpass_dict)
+
 else:
     print("WARNING:    The dataset is not Intilaized ❌")
     intialize_data_set()
@@ -25,11 +23,11 @@ else:
 #convert dict_list to id value pair
 
 #Load entire contents in dataset
-def all_outpass():
+def all_outpass_data():
     return outpass_dict
 
-#Load specific Outpass
-def outpass_id(id):
+#Load specific Outpass by iud
+def outpass_id_data(id):
     id = str(id)
     if id in outpass_dict:
         return outpass_dict[id]
@@ -39,4 +37,14 @@ def outpass_id(id):
             status_code=status.HTTP_404_NOT_FOUND, 
             detail="Item not found"
         )
-        
+
+#Add an Outpass
+def add_outpass_data(outpass: OutPass):
+    print(f"INFO:   Outpass Aded Sucessfuly id:{outpass.id} ☑️")
+    outpass_dict[outpass.id] = outpass
+    data = dict(outpass)
+    with open(file_path, "a", newline='') as file:
+        writer = csv.DictWriter(file,fieldnames=field_names)
+        writer.writerow(data)
+    return outpass
+    

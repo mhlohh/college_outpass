@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, status
-from app.core.data_loader import all_outpass,outpass_id
+from app.core.data_loader import all_outpass_data,outpass_id_data,add_outpass_data
 from app.core.model import OutPass
 import csv
 import os
@@ -19,16 +19,15 @@ lists = {
 
 @app.get("/outpass")
 def outpass():
-    return all_outpass()
+    return all_outpass_data()
 
 @app.get("/outpass/{id}")
 def get_outpass_(id:str):
-    return outpass_id(id)
+    return outpass_id_data(id)
   
 @app.post("/outpass")
 def add_outpass(outpass:OutPass):
-    lists[outpass.id] = outpass
-    return outpass
+    return add_outpass_data(outpass)
 
 @app.put("/outpass/{id}")
 def update_outpass(outpass:OutPass, id:str):
