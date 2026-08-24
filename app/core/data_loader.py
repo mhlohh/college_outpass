@@ -1,30 +1,42 @@
-from dataclasses import dataclass, asdict
-from model import OutPass
+from app.core.data_config import(
+    intialize_data_set,
+    file_path
+)
+import os
 import csv
+from fastapi import FastAPI, HTTPException, status
 
-@dataclass
-class User:
-    username: str
-    email: str
-    active: bool
 
-# Create an instance
-user_profile = User(username="johndoe", email="john@example.com", active=True)
+outpass_dict = {}
+dict_list = []
+#load csv as dictionary
+if os.path.exists(file_path):
+    with open(file_path,"r") as file:
+        reader = csv.DictReader(file)
+        dict_list = list(reader)
+    for item in dict_list:
+        outpass_dict[item["id"]] = item
+        print(outpass_dict)
+else:
+    print("WARNING:    The dataset is not Intilaized ❌")
+    intialize_data_set()
+    print("INFO:    The dataset is intialized ☑️")
 
-# Convert to dictionary
-user_dict = asdict(user_profile)
-userProfile = [user_dict]
-print(user_dict)
-# Output: {'username': 'johndoe', 'email': 'john@example.com', 'active': True}
+#convert dict_list to id value pair
 
-# CSV file name
-csv_filename = "cars.csv"
+#Load entire contents in dataset
+def all_outpass():
+    return outpass_dict
 
-# Define the field names (headers)
-fieldnames = ["username", "email", "active"]
-
-# Writing to CSV
-with open(csv_filename, mode='w', newline='') as file:
-    writer = csv.DictWriter(file, fieldnames=fieldnames)
-    writer.writeheader()  # Write header row
-    writer.writerows(userProfile)  # Write data rows
+#Load specific Outpass
+def outpass_id(id):
+    id = str(id)
+    if id in outpass_dict:
+        return outpass_dict[id]
+    else:
+        print("WARNING:  Item not found ❌")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail="Item not found"
+        )
+        

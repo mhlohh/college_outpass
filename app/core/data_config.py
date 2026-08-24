@@ -1,12 +1,11 @@
-from model import OutPass
-from dataclasses import fields
+from app.core.model import OutPass
 import csv
 import os
 field_names = list(OutPass.model_fields.keys())
 
 file_name = "student_outpass"
 
-file_path = f"../data/{file_name}.csv"
+file_path = f"data/{file_name}.csv"
 
 def intialize_data_set(field_names = field_names):
     if os.path.exists(file_path):
@@ -16,4 +15,3 @@ def intialize_data_set(field_names = field_names):
             writer = csv.DictWriter(file, fieldnames=field_names) 
             writer.writeheader()
 
-intialize_data_set()

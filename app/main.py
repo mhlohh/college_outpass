@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, status
+from app.core.data_loader import all_outpass,outpass_id
 from app.core.model import OutPass
 import csv
 import os
@@ -18,18 +19,12 @@ lists = {
 
 @app.get("/outpass")
 def outpass():
-    return lists
+    return all_outpass()
 
 @app.get("/outpass/{id}")
-def get_outpass_register(id:str):
-    if id not in lists:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Item with Registration ID {id} does not exist"
-        )
-    else:
-        return lists[id]
-
+def get_outpass_(id:str):
+    return outpass_id(id)
+  
 @app.post("/outpass")
 def add_outpass(outpass:OutPass):
     lists[outpass.id] = outpass
@@ -53,10 +48,3 @@ def delete_outpass(id):
 
     return "Deleted Sucessfully"
         
-
-
-with open("dataset.csv", "w", newline="") as f:
-    # 2. Write the standard CSV data
-    writer = csv.writer(f)
-    writer.writerows(lists)
-q
