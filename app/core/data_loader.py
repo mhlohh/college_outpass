@@ -31,7 +31,7 @@ def all_outpass_data():
     return outpass_dict
 
 
-# Load specific Outpass by iud
+# Load specific Outpass by id
 def outpass_id_data(id):
     id = str(id)
     if id in outpass_dict:
